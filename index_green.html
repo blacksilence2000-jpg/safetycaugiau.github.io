@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Toàn Thực Phẩm Cầu Giấy - Cau Giay Food Safety</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles_green.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🥗</div>
+                <div>
+                    <h1>An Toàn Thực Phẩm Cầu Giấy</h1>
+                    <div class="subtitle">Cau Giay Small Eateries Safety Platform</div>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-btn active" onclick="showSection('browse')">Tìm Quán / Browse</button>
+                <button class="nav-btn" onclick="showSection('upload')">Đăng Ký / Register</button>
+                <button class="nav-btn" onclick="showSection('review')">Đánh Giá / Review</button>
+                <button class="nav-btn" onclick="showSection('subscription')">Premium</button>
+                <button class="nav-btn" onclick="showSection('analytics')">Analytics</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Browse Section -->
+        <div id="browse-section">
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalStores">10</div>
+                    <div class="stat-label">Tổng Số Quán / Total Stores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="certifiedStores">10</div>
+                    <div class="stat-label">Có Chứng Nhận / Certified</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.7</div>
+                    <div class="stat-label">Điểm TB / Avg Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReviews">892</div>
+                    <div class="stat-label">Đánh Giá / Reviews</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="filterStores('excellent')">
+                    <div class="action-icon">⭐</div>
+                    <div class="action-text">
+                        <h3>Quán Xuất Sắc</h3>
+                        <p>Điểm an toàn > 90</p>
+                    </div>
+                </div>
+                <div class="action-card" style="background: linear-gradient(135deg, var(--primary) 0%, #DC2626 100%);" onclick="filterStores('open-kitchen')">
+                    <div class="action-icon">👁️</div>
+                    <div class="action-text">
+                        <h3>Bếp Mở</h3>
+                        <p>Xem quy trình chế biến</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Tìm quán ăn tại Cầu Giấy... / Search eateries in Cau Giay..." id="searchInput">
+                    <button class="search-btn" onclick="searchStores()">🔍 Tìm Kiếm / Search</button>
+                </div>
+                <div class="filters">
+                    <div class="filter-pill active" onclick="filterStores('all')">Tất Cả / All</div>
+                    <div class="filter-pill" onclick="filterStores('excellent')">⭐ Xuất Sắc / Excellent</div>
+                    <div class="filter-pill" onclick="filterStores('certified')">✓ Có Chứng Nhận / Certified</div>
+                    <div class="filter-pill" onclick="filterStores('open-kitchen')">👁️ Bếp Mở / Open Kitchen</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div class="sort-options">
+                        <span class="sort-label">Sắp xếp / Sort:</span>
+                        <select class="sort-select" onchange="sortStores(this.value)">
+                            <option value="safety">Điểm an toàn / Safety Score</option>
+                            <option value="reviews">Đánh giá / Reviews</option>
+                            <option value="name">Tên / Name</option>
+                        </select>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" onclick="toggleView('grid')">
+                            <span>📱</span> Lưới / Grid
+                        </button>
+                        <button class="toggle-btn" onclick="toggleView('list')">
+                            <span>📋</span> Danh sách / List
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stores-grid" id="storesGrid">
+                <!-- Store cards will be generated here -->
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="upload-section" class="hidden">
+            <div class="upload-section">
+                <h2 style="margin-bottom: 2rem; font-size: 2rem; color: var(--dark);">📋 Đăng Ký Quán Ăn Nhỏ / Register Your Small Eatery</h2>
+                
+                <form id="uploadForm" onsubmit="handleUpload(event)">
+                    <div class="form-group">
+                        <label>Tên Quán / Restaurant Name *</label>
+                        <input type="text" name="name" class="form-input" required placeholder="VD: Bún Đậu Nghĩa Tân">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa Chỉ / Address *</label>
+                        <input type="text" name="address" class="form-input" required placeholder="VD: 89 Duy Tân, Cầu Giấy, Hà Nội">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số Điện Thoại / Phone Number *</label>
+                        <input type="tel" name="phone" class="form-input" required placeholder="VD: 024 3xxx xxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Loại Hình / Type *</label>
+                        <select name="type" class="form-input" required>
+                            <option value="">Chọn loại hình...</option>
+                            <option value="small" selected>Quán Ăn Nhỏ / Small Eatery</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📄 Chứng Nhận An Toàn Thực Phẩm / Food Safety Certificate</label>
+                        <div class="file-upload" onclick="document.getElementById('certificateFile').click()">
+                            <input type="file" id="certificateFile" name="certificate" accept="image/*,.pdf">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📎</div>
+                            <div>Click để tải lên chứng nhận</div>
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">PDF hoặc hình ảnh</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏥 Giấy Khám Sức Khỏe Nhân Viên / Staff Health Certificate</label>
+                        <div class="file-upload" onclick="document.getElementById('healthFile').click()">
+                            <input type="file" id="healthFile" name="health" accept="image/*,.pdf">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🏥</div>
+                            <div>Click để tải lên giấy khám sức khỏe</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mô Tả / Description</label>
+                        <textarea name="description" class="form-input" placeholder="Giới thiệu về quán của bạn..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">✅ Đăng Ký Ngay / Submit Registration</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div id="review-section" class="hidden">
+            <div class="upload-section">
+                <h2 style="margin-bottom: 2rem; font-size: 2rem; color: var(--dark);">⭐ Đánh Giá Quán Ăn / Review Small Eatery</h2>
+                
+                <form id="reviewForm" onsubmit="handleReview(event)">
+                    <div class="form-group">
+                        <label>Tên Quán / Restaurant Name *</label>
+                        <input type="text" class="form-input" required placeholder="Nhập tên quán bạn muốn đánh giá">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên Của Bạn / Your Name *</label>
+                        <input type="text" class="form-input" required placeholder="VD: Nguyễn Văn A">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Đánh Giá An Toàn / Safety Rating *</label>
+                        <div style="display: flex; gap: 1rem; font-size: 2rem;">
+                            <span class="star-rating" onclick="setRating(1)">⭐</span>
+                            <span class="star-rating" onclick="setRating(2)">⭐</span>
+                            <span class="star-rating" onclick="setRating(3)">⭐</span>
+                            <span class="star-rating" onclick="setRating(4)">⭐</span>
+                            <span class="star-rating" onclick="setRating(5)">⭐</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quan Sát An Toàn / Safety Observations</label>
+                        <div style="display: grid; gap: 0.8rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                                <input type="checkbox" style="width: 20px; height: 20px;">
+                                Bếp sạch sẽ / Clean kitchen
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                                <input type="checkbox" style="width: 20px; height: 20px;">
+                                Nhân viên đeo khẩu trang / Staff wearing masks
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                                <input type="checkbox" style="width: 20px; height: 20px;">
+                                Thực phẩm được che đậy / Food covered
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                                <input type="checkbox" style="width: 20px; height: 20px;">
+                                Có nước rửa tay / Hand washing available
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nhận Xét / Comments *</label>
+                        <textarea class="form-input" required placeholder="Chia sẻ trải nghiệm của bạn về vệ sinh an toàn thực phẩm..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📸 Hình Ảnh / Photos (optional)</label>
+                        <div class="file-upload" onclick="document.getElementById('reviewImages').click()">
+                            <input type="file" id="reviewImages" accept="image/*" multiple>
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📸</div>
+                            <div>Thêm hình ảnh về quán</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">📝 Gửi Đánh Giá / Submit Review</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Subscription Section -->
+        <div id="subscription-section" class="hidden">
+            <div class="upload-section">
+                <h2 style="margin-bottom: 2rem; font-size: 2rem; color: var(--dark);">Gói Đăng Ký Premium</h2>
+                <div class="subscription-grid">
+                    <div class="subscription-card">
+                        <div class="plan-badge">Hàng Tháng</div>
+                        <h3>Gói Premium Tháng</h3>
+                        <div class="plan-price">33.000 VND<span>/tháng</span></div>
+                        <p>Gói giả lập cho bản demo. Bao gồm huy hiệu premium và ưu tiên hiển thị.</p>
+                        <button class="submit-btn" type="button" onclick="handleSubscription('monthly')">Đăng Ký Theo Tháng</button>
+                    </div>
+                    <div class="subscription-card featured">
+                        <div class="plan-badge">Hàng Năm</div>
+                        <h3>Gói Premium Năm</h3>
+                        <div class="plan-price">378.000 VND<span>/năm</span></div>
+                        <p>Gói giả lập cho bản demo. Tiết kiệm hơn khi thanh toán theo năm.</p>
+                        <button class="submit-btn" type="button" onclick="handleSubscription('yearly')">Đăng Ký Theo Năm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="hidden">
+            <div class="analytics-shell">
+                <div class="analytics-header-row">
+                    <h2>Traffic Analytics</h2>
+                    <select id="analyticsRange" class="analytics-range" onchange="renderAnalytics()">
+                        <option value="7d">Past one week</option>
+                        <option value="24h">Last 24 hours</option>
+                    </select>
+                </div>
+
+                <div class="analytics-panel">
+                    <div class="analytics-title-row">
+                        <h3>Requests</h3>
+                        <div id="uniqueIpLabel">0 unique IP addresses</div>
+                    </div>
+                    <svg id="requestsLineChart" viewBox="0 0 1000 280" class="line-chart-svg"></svg>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-panel">
+                        <h3>Top URLs</h3>
+                        <div id="topUrlsList" class="metric-list"></div>
+                    </div>
+
+                    <div class="analytics-panel">
+                        <h3>Top Referrers</h3>
+                        <div id="topReferrersList" class="metric-list"></div>
+                    </div>
+
+                    <div class="analytics-panel">
+                        <h3>HTTP Statuses (24h)</h3>
+                        <svg id="statusLineChart" viewBox="0 0 1000 220" class="line-chart-svg"></svg>
+                    </div>
+
+                    <div class="analytics-panel">
+                        <h3>Request Durations (ms)</h3>
+                        <div id="durationBars" class="duration-bars"></div>
+                    </div>
+
+                    <div class="analytics-panel">
+                        <h3>Top Browsers</h3>
+                        <div class="pie-wrap">
+                            <div id="browserPie" class="pie-chart"></div>
+                            <div id="browserLegend" class="pie-legend"></div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-panel">
+                        <h3>Top Devices</h3>
+                        <div class="pie-wrap">
+                            <div id="devicePie" class="pie-chart"></div>
+                            <div id="deviceLegend" class="pie-legend"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Store Detail Modal -->
+    <div id="storeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeModal()">×</button>
+                <h2 id="modalStoreName" style="font-size: 2rem; margin-bottom: 0.5rem;">Store Name</h2>
+                <p id="modalStoreAddress" style="opacity: 0.9;">Address</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="showSection('upload')" title="Đăng ký quán mới">+</div>
+
+    <!-- Comparison Bar -->
+    <div class="compare-bar" id="compareBar">
+        <div class="compare-items" id="compareItems">
+            <!-- Compare items will be added here -->
+        </div>
+        <button class="compare-btn" onclick="showComparison()">So Sánh / Compare</button>
+    </div>
+
+    <script src="script_green.js"></script>
+</body>
+</html>
